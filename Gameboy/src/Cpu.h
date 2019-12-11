@@ -48,20 +48,17 @@ public:
 
 private:
 
-	//struct instruction
-	//{
-	//	const char* mneumonic;
-	//	byte length;
-	//	byte duration;
-	//	void (Cpu::*)() action;
-	//};
-
-	//const struct instruction instructions[0xFF]{
-	//	{ "NOP", 0, 0, &Cpu::nop }
-	//};
-
 	Mmu& mmu;
 
+	// instructions
 	void nop(void);
+	void ld_r_n(&byte r, byte n);
+	void ld_n_nn(word& reg, word nn);
+
+	void ld_a_n(byte n);
+
+	// memory
+	byte read_byte();
+	word read_word();
 };
 
