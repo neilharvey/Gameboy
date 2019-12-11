@@ -56,19 +56,19 @@ void Cpu::execute_opcode(const byte& opcode) {
 void Cpu::nop() {
 }
 
-// Put value n into register r.
 void Cpu::ld_r_n(&byte r, byte n) {
+	r = n;
 }
 
-//  Put value nn into n.
 void Cpu::ld_n_nn(word& n, word nn) {
 	n = nn;
 }
 
-void Cpu::ld_a_n(byte n) {}
+void Cpu::ld_a_n(byte n) { 
+	a = n; 
+}
 
-// Put value A into n
-void Cpu::ld_n_a(byte n) {
+void Cpu::ld_n_a(byte& n) {
 }
 
 byte Cpu::read_byte() {
