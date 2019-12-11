@@ -152,6 +152,7 @@
     <ClCompile Include="Mmu.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BootRom.h" />
     <ClInclude Include="Cpu.h" />
     <ClInclude Include="Mmu.h" />
     <ClInclude Include="Types.h" />

@@ -1,10 +1,14 @@
 #pragma once
 #include "Types.h"
+#include "Bootrom.h"
 
 class Mmu
 {
-	byte Read(word address);
+public:
+	byte read(word address);
 
-	void Write(word address, byte value);
+	void write(word address, byte value);
+private:
+	byte ram[0xFFFF];
 };
 
