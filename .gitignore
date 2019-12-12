@@ -1,2 +1,5 @@
+# Build output
 out/
-/Gameboy/.vs
+
+# Visual Studio cache/options directory
+.vs/
