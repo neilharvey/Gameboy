@@ -1,5 +1,6 @@
 # Build output
 out/
+build/
 
 # Visual Studio cache/options directory
 .vs/
