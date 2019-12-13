@@ -7,4 +7,3 @@ cmake_minimum_required (VERSION 3.8)
 
 # TODO: Add tests and install targets if needed.
 enable_testing()
-

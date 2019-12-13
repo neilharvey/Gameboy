@@ -1,1 +1,3 @@
-#include "CpuTest.h"
+#include "..\src\cpu.h"
+#include "..\src\mmu.h"
+
