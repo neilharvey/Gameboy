@@ -6,8 +6,8 @@ int main()
 {
     try
     {
-        Mmu mmu;
-        Cpu cpu(mmu);
+        std::unique_ptr<Mmu> mmu = std::make_unique<Mmu>();
+        Cpu cpu(*mmu);
         while (cpu.pc < 0x0100)
         {
             cpu.tick();

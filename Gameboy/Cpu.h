@@ -9,6 +9,13 @@ enum class Condition {
 	C
 };
 
+enum class Flag {
+	Z = 7,
+	N = 6,
+	H = 5,
+	C = 4
+};
+
 class Cpu
 {
 public:
@@ -85,7 +92,7 @@ private:
 	//void sbc(byte n);
 	//void and(byte n);
 	//void or(byte n);
-	//void xora(byte n);
+	void xorn(byte n);
 	//void cp(byte n);
 	//void inc(byte& r);
 	//void dec(byte& r);
@@ -145,6 +152,10 @@ private:
 	// memory
 	byte next_byte();
 	word next_word();
+
+	// flags
+	bool get_flag(Flag flag);
+	void set_flag(Flag flag, bool value);
 
 	//// utility
 	//void is_true(Condition cc);

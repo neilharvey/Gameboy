@@ -41,6 +41,18 @@ void Cpu::ld(word& r, word nn)
 	r = nn;
 }
 
+void Cpu::xorn(byte n)
+{
+	byte result = a ^ n;
+
+	set_flag(Flag::Z, result == 0);
+	set_flag(Flag::N, false);
+	set_flag(Flag::H, false);
+	set_flag(Flag::C, false);
+
+	a = result;
+}
+
 void Cpu::nop() {}
 
 byte Cpu::next_byte() {
@@ -52,6 +64,16 @@ word Cpu::next_word() {
 	byte hi = next_byte();
 	word word = ((hi << 8) + lo);
 	return word;
+}
+
+bool Cpu::get_flag(Flag flag)
+{
+	
+}
+
+void Cpu::set_flag(Flag flag, bool value)
+{
+
 }
 
 void Cpu::not_implemented(byte opcode)

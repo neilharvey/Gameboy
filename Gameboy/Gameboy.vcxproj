@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bitwise.h" />
     <ClInclude Include="BootRom.h" />
     <ClInclude Include="Cpu.h" />
     <ClInclude Include="Gameboy.h" />
