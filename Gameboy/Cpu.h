@@ -66,14 +66,14 @@ private:
     void ld(byte& r, byte n);
     //void ld_a_n(byte n);
     //void ld_n_a(byte& n);
-    void ld_a_c(byte c);
-    void ld_c_a(byte c);
+    void ld_a_c();
+    void ld_c_a();
     void ldd_a_hl();
     void ldd_hl_a();
     void ldi_a_hl();
     void ldi_hl_a();
     void ldh_n_a(byte n);
-    void ldh_a_b(byte n);
+    void ldh_a_n(byte n);
 
     //// 16-bit loads
     void ld(word& r, word nn);

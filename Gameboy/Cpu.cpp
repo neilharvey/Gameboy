@@ -25,22 +25,27 @@ void Cpu::execute_opcode(const byte& opcode) {
 	switch (opcode)
 	{
 	case 0x00: return nop();
-
+	case 0x01: return ld(bc, next_word());
+    //case 0x02: return ld(mmu.read(bc), a);
+    case 0x0A: return ld(a, mmu.read(bc));
     case 0x06: return ld(b, next_byte());
     case 0x0E: return ld(c, next_byte());
+	case 0x11: return ld(de, next_word());
+    //case 0x12: return ld(mmu.read(de),a);
     case 0x16: return ld(d, next_byte());
+    case 0x1A: return ld(a, mmu.read(de));
+    case 0x20: return jr(Condition::NZ, next_signed_byte());
+	case 0x21: return ld(hl, next_word());
+    case 0x22: return ldi_hl_a();
+    case 0x2A: return ldi_a_hl();
     case 0x1E: return ld(e, next_byte());
     case 0x26: return ld(h, next_byte());
     case 0x2E: return ld(l, next_byte());
-
-    case 0x7F: return ld(a, a);
-    case 0x78: return ld(a, b);
-    case 0x79: return ld(a, c);
-    case 0x7A: return ld(a, d);
-    case 0x7B: return ld(a, e);
-    case 0x7C: return ld(a, h);
-    case 0x7D: return ld(a, l);
-    case 0x7E: return ld(a, mmu.read(hl));
+	case 0x31: return ld(sp, next_word());
+    case 0x32: return ldd_hl_a();
+    //case 0x36: return ld(mmu.read(hl), next_byte());
+    case 0x3A: return ldd_a_hl();
+    case 0x3E: return ld(a, next_byte());
     case 0x40: return ld(b, b);
     case 0x41: return ld(b, c);
     case 0x42: return ld(b, d);
@@ -72,19 +77,38 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0x5C: return ld(e, h);
     case 0x5D: return ld(e, l);
     case 0x5E: return ld(e, mmu.read(hl));
-    case 0x60: return ld(h, b);
     case 0x5F: return ld(e, a);
+    case 0x60: return ld(h, b);
+    case 0x61: return ld(h, c);
+    case 0x62: return ld(h, d);
+    case 0x63: return ld(h, e);
+    case 0x64: return ld(h, h);
+    case 0x65: return ld(h, l);
+    case 0x66: return ld(h, mmu.read(hl));
     case 0x67: return ld(h, a);
+    case 0x68: return ld(l, b);
+    case 0x69: return ld(l, c);
+    case 0x6A: return ld(l, d);
+    case 0x6B: return ld(l, e);
+    case 0x6C: return ld(l, h);
+    case 0x6D: return ld(l, l);
+    case 0x6E: return ld(l, mmu.read(hl));
     case 0x6F: return ld(l, a);
-
-	case 0x01: return ld(bc, next_word());
-	case 0x11: return ld(de, next_word());
-    case 0x20: return jr(Condition::NZ, next_signed_byte());
-	case 0x21: return ld(hl, next_word());
-	case 0x31: return ld(sp, next_word());
-
-    case 0x32: return ldd_hl_a();
-
+    //case 0x70: return ld(mmu.read(hl), b);
+    //case 0x71: return ld(mmu.read(hl), c);
+    //case 0x72: return ld(mmu.read(hl), d);
+    //case 0x73: return ld(mmu.read(hl), e);
+    //case 0x74: return ld(mmu.read(hl), h);
+    //case 0x75: return ld(mmu.read(hl), l);
+    //case 0x77: return ld(mmu.read(hl),a);
+    case 0x78: return ld(a, b);
+    case 0x79: return ld(a, c);
+    case 0x7A: return ld(a, d);
+    case 0x7B: return ld(a, e);
+    case 0x7C: return ld(a, h);
+    case 0x7D: return ld(a, l);
+    case 0x7E: return ld(a, mmu.read(hl));
+    case 0x7F: return ld(a, a);
 	case 0xAF: return xorn(a);
 	case 0xA8: return xorn(b);
 	case 0xA9: return xorn(c);
@@ -93,18 +117,15 @@ void Cpu::execute_opcode(const byte& opcode) {
 	case 0xAC: return xorn(h);
 	case 0xAD: return xorn(l);
 	case 0xAE: return xorn(mmu.read(hl));
-	case 0xEE: return xorn(next_byte());
-
     case 0xCB: return cb(next_byte());
-
-
-    //case 0x02: return ld(bc,a);
-    //case 0x12: return ld(de,a);
-    //case 0x77: return ld(hl,a);
+    case 0xE0: return ldh_n_a(next_byte());
+    case 0xE2: return ld_c_a();
     //case 0xEA: return ld(next_word(), a);
+	case 0xEE: return xorn(next_byte());
+    case 0xF0: return ldh_a_n(next_byte());
+    case 0xF2: return ld_a_c();
+    case 0xFA: return ld(a, mmu.read(next_word()));
 
-
-    
 
 	default:
 		not_implemented(opcode);
@@ -112,14 +133,21 @@ void Cpu::execute_opcode(const byte& opcode) {
     // clang-format on
 }
 
+
+/* 8-Bit Loads */
+
 void Cpu::ld(byte& r, byte n) {
     r = n;
 }
 
-void Cpu::ld_a_c(byte c) {
+void Cpu::ld_a_c() {
+    word address = 0xFF00 + c;
+    a = mmu.read(address);
 }
 
-void Cpu::ld_c_a(byte c) {
+void Cpu::ld_c_a() {
+    word address = 0xFF00 + c;
+    mmu.write(address, a);
 }
 
 void Cpu::ldd_a_hl() {
@@ -139,7 +167,7 @@ void Cpu::ldi_hl_a() {
 void Cpu::ldh_n_a(byte n) {
 }
 
-void Cpu::ldh_a_b(byte n) {
+void Cpu::ldh_a_n(byte n) {
 }
 
 void Cpu::ld(word& r, word nn) {
