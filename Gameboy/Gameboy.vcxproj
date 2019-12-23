@@ -28,13 +28,14 @@
     <ClInclude Include="Types.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="CMakeLists.txt" />
-  </ItemGroup>
-  <ItemGroup>
+    <ClCompile Include="Bitwise.cpp" />
     <ClCompile Include="Cpu.cpp" />
     <ClCompile Include="Gameboy.cpp" />
     <ClCompile Include="Mmu.cpp" />
     <ClCompile Include="Types.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".clang-format" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
