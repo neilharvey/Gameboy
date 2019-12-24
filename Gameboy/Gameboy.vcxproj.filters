@@ -13,7 +13,6 @@
     <ClCompile Include="Cpu.cpp" />
     <ClCompile Include="Gameboy.cpp" />
     <ClCompile Include="Mmu.cpp" />
-    <ClCompile Include="Types.cpp" />
     <ClCompile Include="Bitwise.cpp" />
   </ItemGroup>
   <ItemGroup>

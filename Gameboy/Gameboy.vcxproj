@@ -32,7 +32,6 @@
     <ClCompile Include="Cpu.cpp" />
     <ClCompile Include="Gameboy.cpp" />
     <ClCompile Include="Mmu.cpp" />
-    <ClCompile Include="Types.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".clang-format" />
