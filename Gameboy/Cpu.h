@@ -101,7 +101,7 @@ private:
     void inc(word& r);
     void dec(word& r);
 
-    // Misc
+    // misc
     void swap(byte& n);
     void swap(word address);
     void daa();
@@ -117,23 +117,32 @@ private:
 
     // rotates & Shifts
     void rlca();
-    void rla();
     void rrca();
+    void rla();
     void rra();
-    void rlc(byte n);
-    void rl(byte b);
-    void rrc(byte n);
-    void rr(byte n);
-    void sla(byte n);
-    void sra(byte n);
-    void srl(byte n);
+    void rlc(byte& reg);
+    void rlc(word address);
+    void rl(byte& reg);
+    void rl(word address);
+    void rrc(byte& reg);
+    void rrc(word address);
+    void rr(byte& reg);
+    void rr(word address);
+    void sla(byte& reg);
+    void sla(word address);
+    void sra(byte& reg);
+    void sra(word address);
+    void srl(byte& reg);
+    void srl(word address);
 
     // bitwise
     void bit(int b, byte r);
     void set(int b, byte& r);
+    void set(int b, word address);
     void res(int b, byte& r);
+    void res(int b, word address);
 
-    //// jumps
+    // jumps
     void jp(word nn);
     void jp(Condition cc, word nn);
     void jr(sbyte n);

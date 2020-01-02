@@ -28,16 +28,17 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0x03: return inc(bc);
     case 0x04: return inc(b);
     case 0x05: return dec(b);
-    case 0x0A: return ld(a, mmu.read(bc));
     case 0x06: return ld(b, next_byte());
     case 0x07: return rlca();
     case 0x08: return ld_nn_sp(next_word());
     case 0x09: return add_hl(bc);
+    case 0x0A: return ld(a, mmu.read(bc));
     case 0x0B: return dec(bc);
     case 0x0C: return inc(c);
     case 0x0D: return dec(d);
     case 0x0E: return ld(c, next_byte());
     case 0x0F: return rrca();
+
     case 0x10: return stop();
     case 0x11: return ld(de, next_word());
     case 0x12: return ld(de, a);
@@ -46,6 +47,7 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0x15: return dec(d);
     case 0x16: return ld(d, next_byte());
     case 0x17: return rla();
+    case 0x18: return jr(next_signed_byte());
     case 0x19: return add_hl(de);
     case 0x1A: return ld(a, mmu.read(de));
     case 0x1B: return dec(de);
@@ -53,21 +55,25 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0x1D: return dec(e);
     case 0x1E: return ld(e, next_byte());
     case 0x1F: return rra();
+
     case 0x20: return jr(Condition::NZ, next_signed_byte());
     case 0x21: return ld(hl, next_word());
     case 0x22: return ldi_hl_a();
     case 0x23: return inc(hl);
     case 0x24: return inc(h);
     case 0x25: return dec(h);
+    case 0x26: return ld(h, next_byte());
     case 0x27: return daa();
+    case 0x28: return jr(Condition::Z, next_signed_byte());
     case 0x29: return add_hl(hl);
     case 0x2A: return ldi_a_hl();
     case 0x2B: return dec(hl);
     case 0x2C: return inc(l);
     case 0x2D: return dec(l);
-    case 0x26: return ld(h, next_byte());
     case 0x2E: return ld(l, next_byte());
     case 0x2F: return cpl();
+
+    case 0x30: return jr(Condition::NC, next_signed_byte());
     case 0x31: return ld(sp, next_word());
     case 0x32: return ldd_hl_a();
     case 0x33: return inc(sp);
@@ -75,6 +81,7 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0x35: return dec_hl();
     case 0x36: return ld(hl, next_byte());
     case 0x37: return scf();
+    case 0x38: return jr(Condition::C, next_signed_byte());
     case 0x39: return add_hl(sp);
     case 0x3A: return ldd_a_hl();
     case 0x3B: return dec(sp);
@@ -82,6 +89,7 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0x3D: return dec(a);
     case 0x3E: return ld(a, next_byte());
     case 0x3F: return ccf();
+
     case 0x40: return ld(b, b);
     case 0x41: return ld(b, c);
     case 0x42: return ld(b, d);
@@ -98,6 +106,7 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0x4D: return ld(c, l);
     case 0x4E: return ld(c, mmu.read(hl));
     case 0x4F: return ld(c, a);
+
     case 0x50: return ld(d, b);
     case 0x51: return ld(d, c);
     case 0x52: return ld(d, d);
@@ -114,6 +123,7 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0x5D: return ld(e, l);
     case 0x5E: return ld(e, mmu.read(hl));
     case 0x5F: return ld(e, a);
+
     case 0x60: return ld(h, b);
     case 0x61: return ld(h, c);
     case 0x62: return ld(h, d);
@@ -130,6 +140,7 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0x6D: return ld(l, l);
     case 0x6E: return ld(l, mmu.read(hl));
     case 0x6F: return ld(l, a);
+
     case 0x70: return ld(hl, b);
     case 0x71: return ld(hl, c);
     case 0x72: return ld(hl, d);
@@ -146,6 +157,7 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0x7D: return ld(a, l);
     case 0x7E: return ld(a, mmu.read(hl));
     case 0x7F: return ld(a, a);
+
     case 0x80: return add(b);
     case 0x81: return add(c);
     case 0x82: return add(d);
@@ -154,7 +166,6 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0x85: return add(l);
     case 0x86: return add(mmu.read(hl));
     case 0x87: return add(a);
-    case 0x8F: return adc(a);
     case 0x88: return adc(b);
     case 0x89: return adc(c);
     case 0x8A: return adc(d);
@@ -162,6 +173,8 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0x8C: return adc(h);
     case 0x8D: return adc(l);
     case 0x8E: return adc(mmu.read(hl));
+    case 0x8F: return adc(a);
+
     case 0x90: return sub(b);
     case 0x91: return sub(c);
     case 0x92: return sub(d);
@@ -178,6 +191,7 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0x9D: return sbc(l);
     case 0x9E: return sbc(mmu.read(hl));
     case 0x9F: return sbc(a);
+
     case 0xA0: return And(b);
     case 0xA1: return And(c);
     case 0xA2: return And(d);
@@ -194,6 +208,7 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0xAD: return Xor(l);
     case 0xAE: return Xor(mmu.read(hl));
     case 0xAF: return Xor(a);
+
     case 0xB0: return Or(b);
     case 0xB1: return Or(c);
     case 0xB2: return Or(d);
@@ -210,39 +225,63 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0xBD: return cp(l);
     case 0xBE: return cp(mmu.read(hl));
     case 0xBF: return cp(a);
+
+    case 0xC0: return ret(Condition::NZ);
     case 0xC1: return pop(bc);
     case 0xC2: return jp(Condition::NZ, next_word());
     case 0xC3: return jp(next_word());
+    case 0xC4: return call(Condition::NZ, next_word());
     case 0xC5: return push(bc);
     case 0xC6: return add(next_byte());
+    case 0xC7: return rst(0x00);
+    case 0xC8: return ret(Condition::Z);
+    case 0xC9: return ret();
     case 0xCA: return jp(Condition::Z, next_word());
-    case 0xCE: return adc(next_byte());
     case 0xCB: return cb(next_byte());
+    case 0xCC: return call(Condition::Z, next_word());
+    case 0xCD: return call(next_word());
+    case 0xCE: return adc(next_byte());
+    case 0xCF: return rst(0x08);
+
+    case 0xD0: return ret(Condition::NC);
     case 0xD1: return pop(de);
     case 0xD2: return jp(Condition::NC, next_word());
     case 0xD5: return push(de);
     case 0xD6: return sub(next_byte());
+    case 0xD7: return rst(0x10);
+    case 0xD8: return ret(Condition::C);
+    case 0xD9: return reti();
     case 0xDA: return jp(Condition::C, next_word());
+    case 0xDC: return call(Condition::C, next_word());
+    case 0xDE: return sbc(next_byte());
+    case 0xDF: return rst(0x18);
+
     case 0xE0: return ldh_n_a(next_byte());
     case 0xE1: return pop(hl);
     case 0xE2: return ld_c_a();
     case 0xE5: return push(hl);
     case 0xE6: return And(next_byte());
+    case 0xE7: return rst(0x20);
     case 0xE8: return add_sp(next_byte());
     case 0xE9: return jp(hl);
     case 0xEA: return ld(next_word(), a);
     case 0xEE: return Xor(next_byte());
+    case 0xEF: return rst(0x28);
+
     case 0xF0: return ldh_a_n(next_byte());
     case 0xF1: return pop(af);
     case 0xF2: return ld_a_c();
     case 0xF3: return di();
+    case 0xF5: return push(af);
     case 0xF6: return Or(next_byte());
+    case 0xF7: return rst(0x30);
     case 0xF8: return ldhl_sp(next_byte());
+    case 0xF9: return ld(sp, hl);
     case 0xFA: return ld(a, mmu.read(next_word()));
     case 0xFB: return ei();
-    case 0xF5: return push(af);
-    case 0xF9: return ld(sp, hl);
     case 0xFE: return cp(next_byte());
+    case 0xFF: return rst(0x38);
+
     default:
         not_implemented(opcode);
     }
@@ -437,6 +476,58 @@ void Cpu::ei() {
 
 void Cpu::cb(byte opcode) {
     switch (opcode) {
+
+    case 0x00: return rlc(b);
+    case 0x01: return rlc(c);
+    case 0x02: return rlc(d);
+    case 0x03: return rlc(e);
+    case 0x04: return rlc(h);
+    case 0x05: return rlc(l);
+    case 0x06: return rlc(hl);
+    case 0x07: return rlc(a);
+    case 0x08: return rrc(b);
+    case 0x09: return rrc(c);
+    case 0x0A: return rrc(d);
+    case 0x0B: return rrc(e);
+    case 0x0C: return rrc(h);
+    case 0x0D: return rrc(l);
+    case 0x0E: return rrc(hl);
+    case 0x0F: return rrc(a);
+
+    case 0x10: return rl(b);
+    case 0x11: return rl(c);
+    case 0x12: return rl(d);
+    case 0x13: return rl(e);
+    case 0x14: return rl(h);
+    case 0x15: return rl(l);
+    case 0x16: return rl(hl);
+    case 0x17: return rl(a);
+    case 0x18: return rr(b);
+    case 0x19: return rr(c);
+    case 0x1A: return rr(d);
+    case 0x1B: return rr(e);
+    case 0x1C: return rr(h);
+    case 0x1D: return rr(l);
+    case 0x1E: return rr(hl);
+    case 0x1F: return rr(a);
+
+    case 0x20: return sla(b);
+    case 0x21: return sla(c);
+    case 0x22: return sla(d);
+    case 0x23: return sla(e);
+    case 0x24: return sla(h);
+    case 0x25: return sla(l);
+    case 0x26: return sla(hl);
+    case 0x27: return sla(a);
+    case 0x28: return sra(b);
+    case 0x29: return sra(c);
+    case 0x2A: return sra(d);
+    case 0x2B: return sra(e);
+    case 0x2C: return sra(h);
+    case 0x2D: return sra(l);
+    case 0x2E: return sra(hl);
+    case 0x2F: return sra(a);
+
     case 0x30: return swap(b);
     case 0x31: return swap(c);
     case 0x32: return swap(d);
@@ -445,43 +536,222 @@ void Cpu::cb(byte opcode) {
     case 0x35: return swap(l);
     case 0x36: return swap(hl);
     case 0x37: return swap(a);
+    case 0x38: return srl(b);
+    case 0x39: return srl(c);
+    case 0x3A: return srl(d);
+    case 0x3B: return srl(e);
+    case 0x3C: return srl(h);
+    case 0x3D: return srl(l);
+    case 0x3E: return srl(hl);
+    case 0x3F: return srl(a);
+
+    case 0x40: return bit(0, b);
+    case 0x41: return bit(0, c);
+    case 0x42: return bit(0, d);
+    case 0x43: return bit(0, e);
+    case 0x44: return bit(0, h);
+    case 0x45: return bit(0, l);
+    case 0x46: return bit(0, mmu.read(hl));
+    case 0x47: return bit(0, a);
+    case 0x48: return bit(1, b);
+    case 0x49: return bit(1, c);
+    case 0x4A: return bit(1, d);
+    case 0x4B: return bit(1, e);
+    case 0x4C: return bit(1, h);
+    case 0x4D: return bit(1, l);
+    case 0x4E: return bit(1, mmu.read(hl));
+    case 0x4F: return bit(1, a);
+
+    case 0x50: return bit(2, b);
+    case 0x51: return bit(2, c);
+    case 0x52: return bit(2, d);
+    case 0x53: return bit(2, e);
+    case 0x54: return bit(2, h);
+    case 0x55: return bit(2, l);
+    case 0x56: return bit(2, mmu.read(hl));
+    case 0x57: return bit(2, a);
+    case 0x58: return bit(3, b);
+    case 0x59: return bit(3, c);
+    case 0x5A: return bit(3, d);
+    case 0x5B: return bit(3, e);
+    case 0x5C: return bit(3, h);
+    case 0x5D: return bit(3, l);
+    case 0x5E: return bit(3, mmu.read(hl));
+    case 0x5F: return bit(3, a);
+
+    case 0x60: return bit(4, b);
+    case 0x61: return bit(4, c);
+    case 0x62: return bit(4, d);
+    case 0x63: return bit(4, e);
+    case 0x64: return bit(4, h);
+    case 0x65: return bit(4, l);
+    case 0x66: return bit(4, mmu.read(hl));
+    case 0x67: return bit(4, a);
+    case 0x68: return bit(5, b);
+    case 0x69: return bit(5, c);
+    case 0x6A: return bit(5, d);
+    case 0x6B: return bit(5, e);
+    case 0x6C: return bit(5, h);
+    case 0x6D: return bit(5, l);
+    case 0x6E: return bit(5, mmu.read(hl));
+    case 0x6F: return bit(5, a);
+
+    case 0x70: return bit(6, b);
+    case 0x71: return bit(6, c);
+    case 0x72: return bit(6, d);
+    case 0x73: return bit(6, e);
+    case 0x74: return bit(6, h);
+    case 0x75: return bit(6, l);
+    case 0x76: return bit(6, mmu.read(hl));
+    case 0x77: return bit(6, a);
+    case 0x78: return bit(7, b);
+    case 0x79: return bit(7, c);
+    case 0x7A: return bit(7, d);
+    case 0x7B: return bit(7, e);
     case 0x7C: return bit(7, h);
+    case 0x7D: return bit(7, l);
+    case 0x7E: return bit(7, mmu.read(hl));
+    case 0x7F: return bit(7, a);
+
+    case 0x80: return res(0, b);
+    case 0x81: return res(0, c);
+    case 0x82: return res(0, d);
+    case 0x83: return res(0, e);
+    case 0x84: return res(0, h);
+    case 0x85: return res(0, l);
+    case 0x86: return res(0, hl);
+    case 0x87: return res(0, a);
+    case 0x88: return res(1, b);
+    case 0x89: return res(1, c);
+    case 0x8A: return res(1, d);
+    case 0x8B: return res(1, e);
+    case 0x8C: return res(1, h);
+    case 0x8D: return res(1, l);
+    case 0x8E: return res(1, hl);
+    case 0x8F: return res(1, a);
+
+    case 0x90: return res(2, b);
+    case 0x91: return res(2, c);
+    case 0x92: return res(2, d);
+    case 0x93: return res(2, e);
+    case 0x94: return res(2, h);
+    case 0x95: return res(2, l);
+    case 0x96: return res(2, hl);
+    case 0x97: return res(2, a);
+    case 0x98: return res(3, b);
+    case 0x99: return res(3, c);
+    case 0x9A: return res(3, d);
+    case 0x9B: return res(3, e);
+    case 0x9C: return res(3, h);
+    case 0x9D: return res(3, l);
+    case 0x9E: return res(3, hl);
+    case 0x9F: return res(3, a);
+
+    case 0xA0: return res(4, b);
+    case 0xA1: return res(4, c);
+    case 0xA2: return res(4, d);
+    case 0xA3: return res(4, e);
+    case 0xA4: return res(4, h);
+    case 0xA5: return res(4, l);
+    case 0xA6: return res(4, hl);
+    case 0xA7: return res(4, a);
+    case 0xA8: return res(5, b);
+    case 0xA9: return res(5, c);
+    case 0xAA: return res(5, d);
+    case 0xAB: return res(5, e);
+    case 0xAC: return res(5, h);
+    case 0xAD: return res(5, l);
+    case 0xAE: return res(5, hl);
+    case 0xAF: return res(5, a);
+
+    case 0xB0: return res(6, b);
+    case 0xB1: return res(6, c);
+    case 0xB2: return res(6, d);
+    case 0xB3: return res(6, e);
+    case 0xB4: return res(6, h);
+    case 0xB5: return res(6, l);
+    case 0xB6: return res(6, hl);
+    case 0xB7: return res(6, a);
+    case 0xB8: return res(7, b);
+    case 0xB9: return res(7, c);
+    case 0xBA: return res(7, d);
+    case 0xBB: return res(7, e);
+    case 0xBC: return res(7, h);
+    case 0xBD: return res(7, l);
+    case 0xBE: return res(7, hl);
+    case 0xBF: return res(7, a);
+
+    case 0xC0: return set(0, b);
+    case 0xC1: return set(0, c);
+    case 0xC2: return set(0, d);
+    case 0xC3: return set(0, e);
+    case 0xC4: return set(0, h);
+    case 0xC5: return set(0, l);
+    case 0xC6: return set(0, hl);
+    case 0xC7: return set(0, a);
+    case 0xC8: return set(1, b);
+    case 0xC9: return set(1, c);
+    case 0xCA: return set(1, d);
+    case 0xCB: return set(1, e);
+    case 0xCC: return set(1, h);
+    case 0xCD: return set(1, l);
+    case 0xCE: return set(1, hl);
+    case 0xCF: return set(1, a);
+
+    case 0xD0: return set(2, b);
+    case 0xD1: return set(2, c);
+    case 0xD2: return set(2, d);
+    case 0xD3: return set(2, e);
+    case 0xD4: return set(2, h);
+    case 0xD5: return set(2, l);
+    case 0xD6: return set(2, hl);
+    case 0xD7: return set(2, a);
+    case 0xD8: return set(3, b);
+    case 0xD9: return set(3, c);
+    case 0xDA: return set(3, d);
+    case 0xDB: return set(3, e);
+    case 0xDC: return set(3, h);
+    case 0xDD: return set(3, l);
+    case 0xDE: return set(3, hl);
+    case 0xDF: return set(3, a);
+
+    case 0xE0: return set(4, b);
+    case 0xE1: return set(4, c);
+    case 0xE2: return set(4, d);
+    case 0xE3: return set(4, e);
+    case 0xE4: return set(4, h);
+    case 0xE5: return set(4, l);
+    case 0xE6: return set(4, hl);
+    case 0xE7: return set(4, a);
+    case 0xE8: return set(5, b);
+    case 0xE9: return set(5, c);
+    case 0xEA: return set(5, d);
+    case 0xEB: return set(5, e);
+    case 0xEC: return set(5, h);
+    case 0xED: return set(5, l);
+    case 0xEE: return set(5, hl);
+    case 0xEF: return set(5, a);
+
+    case 0xF0: return set(6, b);
+    case 0xF1: return set(6, c);
+    case 0xF2: return set(6, d);
+    case 0xF3: return set(6, e);
+    case 0xF4: return set(6, h);
+    case 0xF5: return set(6, l);
+    case 0xF6: return set(6, hl);
+    case 0xF7: return set(6, a);
+    case 0xF8: return set(7, b);
+    case 0xF9: return set(7, c);
+    case 0xFA: return set(7, d);
+    case 0xFB: return set(7, e);
+    case 0xFC: return set(7, h);
+    case 0xFD: return set(7, l);
+    case 0xFE: return set(7, hl);
+    case 0xFF: return set(7, a);
+
     default:
         not_implemented(opcode);
     }
-}
-
-void Cpu::rlca() {
-}
-
-void Cpu::rla() {
-}
-
-void Cpu::rrca() {
-}
-
-void Cpu::rra() {
-}
-
-void Cpu::rlc(byte n) {
-}
-
-void Cpu::rl(byte b) {
-}
-
-void Cpu::rrc(byte n) {
-}
-
-void Cpu::rr(byte n) {
-}
-
-void Cpu::sla(byte n) {
-}
-
-void Cpu::sra(byte n) {
-}
-
-void Cpu::srl(byte n) {
 }
 
 void Cpu::bit(int b, byte r) {
@@ -491,12 +761,6 @@ void Cpu::bit(int b, byte r) {
     set_flag(Flag::Z, !result);
     set_flag(Flag::N, false);
     set_flag(Flag::H, true);
-}
-
-void Cpu::set(int b, byte& r) {
-}
-
-void Cpu::res(int b, byte& r) {
 }
 
 void Cpu::jp(word nn) {
