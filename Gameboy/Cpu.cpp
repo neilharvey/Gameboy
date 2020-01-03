@@ -32,7 +32,7 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0x07: return rlca();
     case 0x08: return ld_nn_sp(next_word());
     case 0x09: return add_hl(bc);
-    case 0x0A: return ld(a, mmu.read(bc));
+    case 0x0A: return ld(a, read_byte(bc));
     case 0x0B: return dec(bc);
     case 0x0C: return inc(c);
     case 0x0D: return dec(d);
@@ -49,7 +49,7 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0x17: return rla();
     case 0x18: return jr(next_signed_byte());
     case 0x19: return add_hl(de);
-    case 0x1A: return ld(a, mmu.read(de));
+    case 0x1A: return ld(a, read_byte(de));
     case 0x1B: return dec(de);
     case 0x1C: return inc(e);
     case 0x1D: return dec(e);
@@ -96,7 +96,7 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0x43: return ld(b, e);
     case 0x44: return ld(b, h);
     case 0x45: return ld(b, l);
-    case 0x46: return ld(b, mmu.read(hl));
+    case 0x46: return ld(b, read_byte(hl));
     case 0x47: return ld(b, a);
     case 0x48: return ld(c, b);
     case 0x49: return ld(c, c);
@@ -104,7 +104,7 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0x4B: return ld(c, e);
     case 0x4C: return ld(c, h);
     case 0x4D: return ld(c, l);
-    case 0x4E: return ld(c, mmu.read(hl));
+    case 0x4E: return ld(c, read_byte(hl));
     case 0x4F: return ld(c, a);
 
     case 0x50: return ld(d, b);
@@ -113,7 +113,7 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0x53: return ld(d, e);
     case 0x54: return ld(d, h);
     case 0x55: return ld(d, l);
-    case 0x56: return ld(d, mmu.read(hl));
+    case 0x56: return ld(d, read_byte(hl));
     case 0x57: return ld(d, a);
     case 0x58: return ld(e, b);
     case 0x59: return ld(e, c);
@@ -121,7 +121,7 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0x5B: return ld(e, e);
     case 0x5C: return ld(e, h);
     case 0x5D: return ld(e, l);
-    case 0x5E: return ld(e, mmu.read(hl));
+    case 0x5E: return ld(e, read_byte(hl));
     case 0x5F: return ld(e, a);
 
     case 0x60: return ld(h, b);
@@ -130,7 +130,7 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0x63: return ld(h, e);
     case 0x64: return ld(h, h);
     case 0x65: return ld(h, l);
-    case 0x66: return ld(h, mmu.read(hl));
+    case 0x66: return ld(h, read_byte(hl));
     case 0x67: return ld(h, a);
     case 0x68: return ld(l, b);
     case 0x69: return ld(l, c);
@@ -138,7 +138,7 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0x6B: return ld(l, e);
     case 0x6C: return ld(l, h);
     case 0x6D: return ld(l, l);
-    case 0x6E: return ld(l, mmu.read(hl));
+    case 0x6E: return ld(l, read_byte(hl));
     case 0x6F: return ld(l, a);
 
     case 0x70: return ld(hl, b);
@@ -155,7 +155,7 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0x7B: return ld(a, e);
     case 0x7C: return ld(a, h);
     case 0x7D: return ld(a, l);
-    case 0x7E: return ld(a, mmu.read(hl));
+    case 0x7E: return ld(a, read_byte(hl));
     case 0x7F: return ld(a, a);
 
     case 0x80: return add(b);
@@ -164,7 +164,7 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0x83: return add(e);
     case 0x84: return add(h);
     case 0x85: return add(l);
-    case 0x86: return add(mmu.read(hl));
+    case 0x86: return add(read_byte(hl));
     case 0x87: return add(a);
     case 0x88: return adc(b);
     case 0x89: return adc(c);
@@ -172,7 +172,7 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0x8B: return adc(e);
     case 0x8C: return adc(h);
     case 0x8D: return adc(l);
-    case 0x8E: return adc(mmu.read(hl));
+    case 0x8E: return adc(read_byte(hl));
     case 0x8F: return adc(a);
 
     case 0x90: return sub(b);
@@ -181,7 +181,7 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0x93: return sub(e);
     case 0x94: return sub(h);
     case 0x95: return sub(l);
-    case 0x96: return sub(mmu.read(hl));
+    case 0x96: return sub(read_byte(hl));
     case 0x97: return sub(a);
     case 0x98: return sbc(b);
     case 0x99: return sbc(c);
@@ -189,7 +189,7 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0x9B: return sbc(e);
     case 0x9C: return sbc(h);
     case 0x9D: return sbc(l);
-    case 0x9E: return sbc(mmu.read(hl));
+    case 0x9E: return sbc(read_byte(hl));
     case 0x9F: return sbc(a);
 
     case 0xA0: return And(b);
@@ -198,7 +198,7 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0xA3: return And(e);
     case 0xA4: return And(h);
     case 0xA5: return And(l);
-    case 0xA6: return And(mmu.read(hl));
+    case 0xA6: return And(read_byte(hl));
     case 0xA7: return And(a);
     case 0xA8: return Xor(b);
     case 0xA9: return Xor(c);
@@ -206,7 +206,7 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0xAB: return Xor(e);
     case 0xAC: return Xor(h);
     case 0xAD: return Xor(l);
-    case 0xAE: return Xor(mmu.read(hl));
+    case 0xAE: return Xor(read_byte(hl));
     case 0xAF: return Xor(a);
 
     case 0xB0: return Or(b);
@@ -215,7 +215,7 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0xB3: return Or(e);
     case 0xB4: return Or(h);
     case 0xB5: return Or(l);
-    case 0xB6: return Or(mmu.read(hl));
+    case 0xB6: return Or(read_byte(hl));
     case 0xB7: return Or(a);
     case 0xB8: return cp(b);
     case 0xB9: return cp(c);
@@ -223,7 +223,7 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0xBB: return cp(e);
     case 0xBC: return cp(h);
     case 0xBD: return cp(l);
-    case 0xBE: return cp(mmu.read(hl));
+    case 0xBE: return cp(read_byte(hl));
     case 0xBF: return cp(a);
 
     case 0xC0: return ret(Condition::NZ);
@@ -277,7 +277,7 @@ void Cpu::execute_opcode(const byte& opcode) {
     case 0xF7: return rst(0x30);
     case 0xF8: return ldhl_sp(next_byte());
     case 0xF9: return ld(sp, hl);
-    case 0xFA: return ld(a, mmu.read(next_word()));
+    case 0xFA: return ld(a, read_byte(next_word()));
     case 0xFB: return ei();
     case 0xFE: return cp(next_byte());
     case 0xFF: return rst(0x38);
@@ -296,7 +296,7 @@ void Cpu::ld(byte& r, byte n) {
 
 void Cpu::ld_a_c() {
     word address = 0xFF00 + c;
-    a = mmu.read(address);
+    a = read_byte(address);
 }
 
 void Cpu::ld_c_a() {
@@ -305,7 +305,7 @@ void Cpu::ld_c_a() {
 }
 
 void Cpu::ldd_a_hl() {
-    a = mmu.read(hl);
+    a = read_byte(hl);
     hl--;
 }
 
@@ -315,7 +315,7 @@ void Cpu::ldd_hl_a() {
 }
 
 void Cpu::ldi_a_hl() {
-    a = mmu.read(hl);
+    a = read_byte(hl);
     hl++;
 }
 
@@ -331,7 +331,7 @@ void Cpu::ldh_n_a(byte n) {
 
 void Cpu::ldh_a_n(byte n) {
     word address = 0xFF00 + n;
-    a = mmu.read(address);
+    a = read_byte(address);
 }
 
 void Cpu::ld(word address, byte n) {
@@ -362,19 +362,47 @@ void Cpu::push(word nn) {
 
 void Cpu::pop(word& nn) {
 
-    byte lsb = mmu.read(sp++);
-    byte msb = mmu.read(sp++);
+    byte lsb = read_byte(sp++);
+    byte msb = read_byte(sp++);
 
     nn = (msb << 8) + lsb;
 }
 
+/* 8-Bit Arithmetic */
+
 void Cpu::add(byte n) {
+
+    int result = a + n;
+
+    set_flag(Flag::Z, a == 0);
+    set_flag(Flag::N, false);
+    set_flag(Flag::H, (a & 0xf) + (n & 0xf) > 0xf);
+    set_flag(Flag::C, result > 0xff);
+
+    a = static_cast<byte>(result);
 }
 
 void Cpu::adc(byte n) {
+
+    int c = get_flag(Flag::C) ? 1 : 0;
+    int result = a + n + c;
+
+    set_flag(Flag::Z, a == 0);
+    set_flag(Flag::N, false);
+    set_flag(Flag::H, (a & 0xf) + (n & 0xf) + c > 0xf);
+    set_flag(Flag::C, result > 0xff);
+
+    a = static_cast<byte>(result);
 }
 
 void Cpu::sub(byte n) {
+
+    int result = a - n;
+
+    set_flag(Flag::Z, a == 0);
+    set_flag(Flag::N, true);
+    set_flag(Flag::H, (a & 0xf) - (n & 0xf) < 0);
+    set_flag(Flag::C, a < n);
 }
 
 void Cpu::sbc(byte n) {
@@ -386,9 +414,8 @@ void Cpu::And(byte n) {
 void Cpu::Or(byte n) {
 }
 
-/* 8-Bit Arithmetic */
-
 void Cpu::Xor(byte n) {
+
     byte result = a ^ n;
 
     set_flag(Flag::Z, result == 0);
@@ -411,6 +438,14 @@ void Cpu::inc_hl() {
 /* 16-Bit Arithmetic */
 
 void Cpu::add_hl(word n) {
+
+    int result = hl + n;
+
+    set_flag(Flag::N, false);
+    set_flag(Flag::H, (hl & 0xFFF) + (result & 0xFFF) > 0xFFF);
+    set_flag(Flag::C, result > 0xFFFF);
+
+    hl = static_cast<word>(result);
 }
 
 void Cpu::add_sp(byte n) {
@@ -433,7 +468,7 @@ void Cpu::swap(byte& n) {
 
 void Cpu::swap(word address) {
 
-    byte value = mmu.read(address);
+    byte value = read_byte(address);
     swap(value);
     mmu.write(address, value);
 }
@@ -463,15 +498,20 @@ void Cpu::scf() {
 void Cpu::nop() {}
 
 void Cpu::halt() {
+    halted = true;
+    // TODO : Implement HALT skip bug
 }
 
 void Cpu::stop() {
+    stopped = true;
 }
 
 void Cpu::di() {
+    ime = false;
 }
 
 void Cpu::ei() {
+    ime = true;
 }
 
 void Cpu::cb(byte opcode) {
@@ -551,7 +591,7 @@ void Cpu::cb(byte opcode) {
     case 0x43: return bit(0, e);
     case 0x44: return bit(0, h);
     case 0x45: return bit(0, l);
-    case 0x46: return bit(0, mmu.read(hl));
+    case 0x46: return bit(0, read_byte(hl));
     case 0x47: return bit(0, a);
     case 0x48: return bit(1, b);
     case 0x49: return bit(1, c);
@@ -559,7 +599,7 @@ void Cpu::cb(byte opcode) {
     case 0x4B: return bit(1, e);
     case 0x4C: return bit(1, h);
     case 0x4D: return bit(1, l);
-    case 0x4E: return bit(1, mmu.read(hl));
+    case 0x4E: return bit(1, read_byte(hl));
     case 0x4F: return bit(1, a);
 
     case 0x50: return bit(2, b);
@@ -568,7 +608,7 @@ void Cpu::cb(byte opcode) {
     case 0x53: return bit(2, e);
     case 0x54: return bit(2, h);
     case 0x55: return bit(2, l);
-    case 0x56: return bit(2, mmu.read(hl));
+    case 0x56: return bit(2, read_byte(hl));
     case 0x57: return bit(2, a);
     case 0x58: return bit(3, b);
     case 0x59: return bit(3, c);
@@ -576,7 +616,7 @@ void Cpu::cb(byte opcode) {
     case 0x5B: return bit(3, e);
     case 0x5C: return bit(3, h);
     case 0x5D: return bit(3, l);
-    case 0x5E: return bit(3, mmu.read(hl));
+    case 0x5E: return bit(3, read_byte(hl));
     case 0x5F: return bit(3, a);
 
     case 0x60: return bit(4, b);
@@ -585,7 +625,7 @@ void Cpu::cb(byte opcode) {
     case 0x63: return bit(4, e);
     case 0x64: return bit(4, h);
     case 0x65: return bit(4, l);
-    case 0x66: return bit(4, mmu.read(hl));
+    case 0x66: return bit(4, read_byte(hl));
     case 0x67: return bit(4, a);
     case 0x68: return bit(5, b);
     case 0x69: return bit(5, c);
@@ -593,7 +633,7 @@ void Cpu::cb(byte opcode) {
     case 0x6B: return bit(5, e);
     case 0x6C: return bit(5, h);
     case 0x6D: return bit(5, l);
-    case 0x6E: return bit(5, mmu.read(hl));
+    case 0x6E: return bit(5, read_byte(hl));
     case 0x6F: return bit(5, a);
 
     case 0x70: return bit(6, b);
@@ -602,7 +642,7 @@ void Cpu::cb(byte opcode) {
     case 0x73: return bit(6, e);
     case 0x74: return bit(6, h);
     case 0x75: return bit(6, l);
-    case 0x76: return bit(6, mmu.read(hl));
+    case 0x76: return bit(6, read_byte(hl));
     case 0x77: return bit(6, a);
     case 0x78: return bit(7, b);
     case 0x79: return bit(7, c);
@@ -610,7 +650,7 @@ void Cpu::cb(byte opcode) {
     case 0x7B: return bit(7, e);
     case 0x7C: return bit(7, h);
     case 0x7D: return bit(7, l);
-    case 0x7E: return bit(7, mmu.read(hl));
+    case 0x7E: return bit(7, read_byte(hl));
     case 0x7F: return bit(7, a);
 
     case 0x80: return res(0, b);
@@ -754,6 +794,60 @@ void Cpu::cb(byte opcode) {
     }
 }
 
+void Cpu::rlca() {
+}
+
+void Cpu::rrca() {
+}
+
+void Cpu::rla() {
+}
+
+void Cpu::rra() {
+}
+
+void Cpu::rlc(byte& reg) {
+}
+
+void Cpu::rlc(word address) {
+}
+
+void Cpu::rl(byte& reg) {
+}
+
+void Cpu::rl(word address) {
+}
+
+void Cpu::rrc(byte& reg) {
+}
+
+void Cpu::rrc(word address) {
+}
+
+void Cpu::rr(byte& reg) {
+}
+
+void Cpu::rr(word address) {
+}
+
+void Cpu::sla(byte& reg) {
+}
+
+void Cpu::sla(word address) {
+}
+
+void Cpu::sra(byte& reg) {
+}
+
+void Cpu::sra(word address) {
+}
+
+void Cpu::srl(byte& reg) {
+}
+
+void Cpu::srl(word address) {
+}
+
 void Cpu::bit(int b, byte r) {
 
     bool result = bitwise::is_bit_set(r, b);
@@ -763,10 +857,26 @@ void Cpu::bit(int b, byte r) {
     set_flag(Flag::H, true);
 }
 
+void Cpu::set(int b, byte& r) {
+}
+
+void Cpu::set(int b, word address) {
+}
+
+void Cpu::res(int b, byte& r) {
+}
+
+void Cpu::res(int b, word address) {
+}
+
 void Cpu::jp(word nn) {
+    pc = nn;
 }
 
 void Cpu::jp(Condition cc, word nn) {
+    if (test_condition(cc)) {
+        jp(nn);
+    }
 }
 
 void Cpu::jr(sbyte n) {
@@ -783,6 +893,11 @@ void Cpu::call(word nn) {
 }
 
 void Cpu::call(Condition cc, word nn) {
+
+    if (test_condition(cc)) {
+        call(nn);
+    }
+
 }
 
 void Cpu::rst(byte n) {
@@ -792,13 +907,22 @@ void Cpu::ret() {
 }
 
 void Cpu::ret(Condition cc) {
+
+    if (test_condition(cc)) {
+        ret();
+    }
+
 }
 
 void Cpu::reti() {
 }
 
+byte Cpu::read_byte(word address) {
+    return mmu.read(address);
+}
+
 byte Cpu::next_byte() {
-    return mmu.read(pc++);
+    return read_byte(pc++);
 }
 
 sbyte Cpu::next_signed_byte() {

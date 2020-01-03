@@ -54,6 +54,10 @@ public:
     word pc;
     word sp;
 
+    bool ime;
+    bool halted;
+    bool stopped;
+
     Cpu(Mmu& m);
     void tick();
 
@@ -159,6 +163,7 @@ private:
     void reti();
 
     // memory
+    byte read_byte(word address);
     byte next_byte();
     sbyte next_signed_byte();
     word next_word();
