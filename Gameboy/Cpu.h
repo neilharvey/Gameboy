@@ -164,6 +164,7 @@ private:
 
     // memory
     byte read_byte(word address);
+    void write_byte(word address, byte value);
     byte next_byte();
     sbyte next_signed_byte();
     word next_word();

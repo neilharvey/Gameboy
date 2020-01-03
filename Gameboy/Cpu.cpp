@@ -403,15 +403,35 @@ void Cpu::sub(byte n) {
     set_flag(Flag::N, true);
     set_flag(Flag::H, (a & 0xf) - (n & 0xf) < 0);
     set_flag(Flag::C, a < n);
+
+    a = static_cast<byte>(result);
 }
 
 void Cpu::sbc(byte n) {
 }
 
 void Cpu::And(byte n) {
+
+    byte result = a & n;
+
+    set_flag(Flag::Z, result == 0);
+    set_flag(Flag::N, false);
+    set_flag(Flag::H, true);
+    set_flag(Flag::C, false);
+
+    a = result;
 }
 
 void Cpu::Or(byte n) {
+
+    byte result = a | n;
+
+    set_flag(Flag::Z, result == 0);
+    set_flag(Flag::N, false);
+    set_flag(Flag::H, false);
+    set_flag(Flag::C, false);
+
+    a = result;
 }
 
 void Cpu::Xor(byte n) {
@@ -427,6 +447,13 @@ void Cpu::Xor(byte n) {
 }
 
 void Cpu::cp(byte n) {
+
+    int result = a - n;
+
+    set_flag(Flag::Z, a == 0);
+    set_flag(Flag::N, true);
+    set_flag(Flag::H, (a & 0xf) - (n & 0xf) < 0);
+    set_flag(Flag::C, a < n);
 }
 
 void Cpu::inc(byte& r) {
@@ -846,6 +873,11 @@ void Cpu::srl(byte& reg) {
 }
 
 void Cpu::srl(word address) {
+
+    byte value = read_byte(address);
+    srl(value);
+    write_byte(address, value);
+
 }
 
 void Cpu::bit(int b, byte r) {
@@ -919,6 +951,10 @@ void Cpu::reti() {
 
 byte Cpu::read_byte(word address) {
     return mmu.read(address);
+}
+
+void Cpu::write_byte(word address, byte value) {
+    mmu.write(address, value);
 }
 
 byte Cpu::next_byte() {
