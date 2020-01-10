@@ -66,6 +66,7 @@ public:
 private:
     Mmu& mmu;
 
+
     // 8-bit loads
     void ld(byte& r, byte n);
     void ld_a_c();
@@ -95,15 +96,15 @@ private:
     void Xor(byte n);
     void cp(byte n);
     void inc(byte& r);
-    void inc_hl();
+    void inc_hl(); // TODO Refactor
     void dec(byte& r);
-    void dec_hl();
+    void dec_hl(); // TOTO Refactor
 
     // 16-bit arithmetic
     void add_hl(word n);
-    void add_sp(byte n);
-    void inc(word& r);
-    void dec(word& r);
+    void add_sp(sbyte n);
+    void inc(word& nn);
+    void dec(word& nn);
 
     // misc
     void swap(byte& n);

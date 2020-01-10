@@ -1,5 +1,6 @@
 #pragma once
+#include <cstdint>
 
 typedef unsigned char byte;
-typedef char sbyte;
+typedef signed char sbyte;
 typedef unsigned short word;

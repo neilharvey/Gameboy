@@ -5,6 +5,12 @@
 #include "Bitwise.h"
 #include "Cpu.h"
 
+using bitwise::is_bit_set;
+using bitwise::set_bit;
+using bitwise::clear_bit;
+using bitwise::get_lsb;
+using bitwise::get_msb;
+
 Cpu::Cpu(Mmu& m) : mmu(m) {
     af = 0;
     bc = 0;
@@ -350,14 +356,14 @@ void Cpu::ldhl_sp(byte n) {
 
 void Cpu::ld_nn_sp(word address) {
 
-    mmu.write(address, bitwise::get_lsb(sp));
-    mmu.write(address + 1, bitwise::get_msb(sp));
+    mmu.write(address, get_lsb(sp));
+    mmu.write(address + 1, get_msb(sp));
 }
 
 void Cpu::push(word nn) {
 
-    mmu.write(--sp, bitwise::get_msb(nn));
-    mmu.write(--sp, bitwise::get_lsb(nn));
+    mmu.write(--sp, get_msb(nn));
+    mmu.write(--sp, get_lsb(nn));
 }
 
 void Cpu::pop(word& nn) {
@@ -374,10 +380,10 @@ void Cpu::add(byte n) {
 
     int result = a + n;
 
-    set_flag(Flag::Z, a == 0);
+    set_flag(Flag::Z, result == 0);
     set_flag(Flag::N, false);
-    set_flag(Flag::H, (a & 0xf) + (n & 0xf) > 0xf);
-    set_flag(Flag::C, result > 0xff);
+    set_flag(Flag::H, (a & 0xF) + (n & 0xF) > 0xF);
+    set_flag(Flag::C, result > 0xFf);
 
     a = static_cast<byte>(result);
 }
@@ -387,10 +393,10 @@ void Cpu::adc(byte n) {
     int c = get_flag(Flag::C) ? 1 : 0;
     int result = a + n + c;
 
-    set_flag(Flag::Z, a == 0);
+    set_flag(Flag::Z, result == 0);
     set_flag(Flag::N, false);
-    set_flag(Flag::H, (a & 0xf) + (n & 0xf) + c > 0xf);
-    set_flag(Flag::C, result > 0xff);
+    set_flag(Flag::H, (a & 0xF) + (n & 0xF) + c > 0xF);
+    set_flag(Flag::C, result > 0xFf);
 
     a = static_cast<byte>(result);
 }
@@ -399,9 +405,9 @@ void Cpu::sub(byte n) {
 
     int result = a - n;
 
-    set_flag(Flag::Z, a == 0);
+    set_flag(Flag::Z, result == 0);
     set_flag(Flag::N, true);
-    set_flag(Flag::H, (a & 0xf) - (n & 0xf) < 0);
+    set_flag(Flag::H, (a & 0xF) - (n & 0xF) < 0);
     set_flag(Flag::C, a < n);
 
     a = static_cast<byte>(result);
@@ -450,16 +456,44 @@ void Cpu::cp(byte n) {
 
     int result = a - n;
 
-    set_flag(Flag::Z, a == 0);
+    set_flag(Flag::Z, result == 0);
     set_flag(Flag::N, true);
-    set_flag(Flag::H, (a & 0xf) - (n & 0xf) < 0);
+    set_flag(Flag::H, (a & 0xF) - (n & 0xF) < 0);
     set_flag(Flag::C, a < n);
 }
 
-void Cpu::inc(byte& r) {
+void Cpu::inc(byte& n) {
+
+    byte result = n + 1;
+
+    set_flag(Flag::Z, result == 0);
+    set_flag(Flag::N, false);
+    set_flag(Flag::H, (result & 0x0F) == 0x00);
+
+    n = result;
+}
+
+void Cpu::dec(byte& n) {
+
+    int result = n - 1;
+
+    set_flag(Flag::Z, result == 0);
+    set_flag(Flag::N, true);
+    set_flag(Flag::H, (result & 0x0F) == 0x0F);
+}
+
+void Cpu::dec_hl() {
+
+    byte value = read_byte(hl);
+    dec(value);
+    write_byte(hl, value);
 }
 
 void Cpu::inc_hl() {
+
+    byte value = read_byte(hl);
+    inc(value);
+    write_byte(hl, value);
 }
 
 /* 16-Bit Arithmetic */
@@ -475,23 +509,41 @@ void Cpu::add_hl(word n) {
     hl = static_cast<word>(result);
 }
 
-void Cpu::add_sp(byte n) {
+void Cpu::add_sp(sbyte n) {
+
+    int result = sp + n;
+
+    set_flag(Flag::Z, false);
+    set_flag(Flag::N, false);
+    // set_flag(Flag::H, ????); // Set or reset according to operation.?
+    // set_flag(Flag::C, ????);
+
+    sp = result;
 }
 
-void Cpu::inc(word& address) {
+void Cpu::inc(word& nn) {
+    nn++;
 }
 
-void Cpu::dec(byte& r) {
+void Cpu::dec(word& nn) {
+    nn--;
 }
 
-void Cpu::dec_hl() {
-}
 
-void Cpu::dec(word& address) {
-}
-
+// TODO
 void Cpu::swap(byte& n) {
+
+    int result = 0; // Swap upper & lower nibles of n
+
+    set_flag(Flag::Z, result == 0);
+    set_flag(Flag::N, false);
+    set_flag(Flag::H, false);
+    set_flag(Flag::C, false);
+
+    n = result;
 }
+
+/* Misc */
 
 void Cpu::swap(word address) {
 
@@ -518,9 +570,11 @@ void Cpu::ccf() {
 }
 
 void Cpu::scf() {
-}
 
-/* Misc */
+    set_flag(Flag::N, false);
+    set_flag(Flag::H, false);
+    set_flag(Flag::C, true);
+}
 
 void Cpu::nop() {}
 
@@ -535,10 +589,12 @@ void Cpu::stop() {
 
 void Cpu::di() {
     ime = false;
+    // TODO: Needs to be disabled AFTER next instruction
 }
 
 void Cpu::ei() {
     ime = true;
+    // TODO: Needs to be enabled AFTER next instruction
 }
 
 void Cpu::cb(byte opcode) {
@@ -821,22 +877,44 @@ void Cpu::cb(byte opcode) {
     }
 }
 
+/* Rotates & Shifts */
+
 void Cpu::rlca() {
+    rlc(a);
 }
 
 void Cpu::rrca() {
+    rrc(a);
 }
 
 void Cpu::rla() {
+    rl(a);
 }
 
 void Cpu::rra() {
+    rr(a);
 }
 
 void Cpu::rlc(byte& reg) {
+
+    byte carry = is_bit_set(reg, 7);
+
+    byte result = reg << 1;
+    result = carry ? set_bit(result, 0) : clear_bit(result, 0);
+
+    set_flag(Flag::Z, result == 0);
+    set_flag(Flag::N, false);
+    set_flag(Flag::H, false);
+    set_flag(Flag::C, carry);
+
+    reg = result;
 }
 
 void Cpu::rlc(word address) {
+
+    byte value = mmu.read(address);
+    rlc(value);
+    mmu.write(address, value);
 }
 
 void Cpu::rl(byte& reg) {
@@ -846,9 +924,25 @@ void Cpu::rl(word address) {
 }
 
 void Cpu::rrc(byte& reg) {
+
+    byte carry = is_bit_set(reg, 0);
+
+    byte result = reg >> 1;
+    result = carry ? set_bit(result, 7) : clear_bit(result, 7);
+
+    set_flag(Flag::Z, result == 0);
+    set_flag(Flag::N, false);
+    set_flag(Flag::H, false);
+    set_flag(Flag::C, carry);
+
+    reg = result;
 }
 
 void Cpu::rrc(word address) {
+
+    byte value = mmu.read(address);
+    rrc(value);
+    mmu.write(address, value);
 }
 
 void Cpu::rr(byte& reg) {
@@ -877,12 +971,13 @@ void Cpu::srl(word address) {
     byte value = read_byte(address);
     srl(value);
     write_byte(address, value);
-
 }
+
+/* Bitwise */
 
 void Cpu::bit(int b, byte r) {
 
-    bool result = bitwise::is_bit_set(r, b);
+    bool result = is_bit_set(r, b);
 
     set_flag(Flag::Z, !result);
     set_flag(Flag::N, false);
@@ -890,15 +985,25 @@ void Cpu::bit(int b, byte r) {
 }
 
 void Cpu::set(int b, byte& r) {
+    r = set_bit(r, b);
 }
 
 void Cpu::set(int b, word address) {
+
+    byte value = read_byte(address);
+    set(b, value);
+    write_byte(address, value);
 }
 
 void Cpu::res(int b, byte& r) {
+    r = clear_bit(r, b);
 }
 
 void Cpu::res(int b, word address) {
+
+    byte value = read_byte(address);
+    res(b, value);
+    write_byte(address, value);
 }
 
 void Cpu::jp(word nn) {
@@ -922,6 +1027,9 @@ void Cpu::jr(Condition cc, sbyte n) {
 }
 
 void Cpu::call(word nn) {
+
+    mmu.write(--sp, pc);
+    pc = nn;
 }
 
 void Cpu::call(Condition cc, word nn) {
@@ -929,13 +1037,16 @@ void Cpu::call(Condition cc, word nn) {
     if (test_condition(cc)) {
         call(nn);
     }
-
 }
 
 void Cpu::rst(byte n) {
+
+    mmu.write(--sp, pc);
+    pc = n;
 }
 
 void Cpu::ret() {
+    pop(pc);
 }
 
 void Cpu::ret(Condition cc) {
@@ -943,10 +1054,11 @@ void Cpu::ret(Condition cc) {
     if (test_condition(cc)) {
         ret();
     }
-
 }
 
 void Cpu::reti() {
+    ret();
+    ei();
 }
 
 byte Cpu::read_byte(word address) {
@@ -973,7 +1085,7 @@ word Cpu::next_word() {
 }
 
 bool Cpu::get_flag(Flag flag) {
-    return bitwise::is_bit_set(f, (int)flag);
+    return is_bit_set(f, (int)flag);
 }
 
 void Cpu::set_flag(Flag flag, bool value) {
