@@ -1103,7 +1103,8 @@ void Cpu::jr(Condition cc, sbyte n) {
 
 void Cpu::call(word nn) {
 
-    mmu.write(--sp, pc);
+    mmu.write(--sp, get_msb(pc));
+    mmu.write(--sp, get_lsb(pc));
     pc = nn;
 }
 
@@ -1116,7 +1117,8 @@ void Cpu::call(Condition cc, word nn) {
 
 void Cpu::rst(byte n) {
 
-    mmu.write(--sp, pc);
+    mmu.write(--sp, get_msb(pc));
+    mmu.write(--sp, get_lsb(pc));
     pc = n;
 }
 
@@ -1180,6 +1182,8 @@ bool Cpu::test_condition(Condition cc) {
         return get_flag(Flag::C);
     case Condition::NC:
         return !get_flag(Flag::C);
+    default:
+        return false;
     }
 }
 
