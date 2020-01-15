@@ -5,11 +5,11 @@
 #include "Bitwise.h"
 #include "Cpu.h"
 
-using bitwise::is_bit_set;
-using bitwise::set_bit;
 using bitwise::clear_bit;
 using bitwise::get_lsb;
 using bitwise::get_msb;
+using bitwise::is_bit_set;
+using bitwise::set_bit;
 
 Cpu::Cpu(Mmu& m) : mmu(m) {
     af = 0;
@@ -897,7 +897,7 @@ void Cpu::rra() {
 
 void Cpu::rlc(byte& reg) {
 
-    byte carry = is_bit_set(reg, 7);
+    bool carry = is_bit_set(reg, 7);
 
     byte result = reg << 1;
     result = carry ? set_bit(result, 0) : clear_bit(result, 0);
@@ -918,14 +918,30 @@ void Cpu::rlc(word address) {
 }
 
 void Cpu::rl(byte& reg) {
+
+    bool carry = get_flag(Flag::C);
+    set_flag(Flag::C, is_bit_set(reg, 7));
+
+    byte result = reg << 1;
+    result = carry ? set_bit(result, 0) : clear_bit(result, 0);
+
+    set_flag(Flag::Z, result == 0);
+    set_flag(Flag::N, false);
+    set_flag(Flag::H, false);    
+
+    reg = result;
 }
 
 void Cpu::rl(word address) {
+
+    byte value = mmu.read(address);
+    rl(value);
+    mmu.write(address, value);
 }
 
 void Cpu::rrc(byte& reg) {
 
-    byte carry = is_bit_set(reg, 0);
+    bool carry = is_bit_set(reg, 0);
 
     byte result = reg >> 1;
     result = carry ? set_bit(result, 7) : clear_bit(result, 7);
@@ -946,24 +962,83 @@ void Cpu::rrc(word address) {
 }
 
 void Cpu::rr(byte& reg) {
+
+    bool carry = get_flag(Flag::C);
+    set_flag(Flag::C, is_bit_set(reg, 0));
+
+    byte result = reg >> 1;
+    result = carry ? set_bit(result, 7) : clear_bit(result, 7);
+
+    set_flag(Flag::Z, result == 0);
+    set_flag(Flag::N, false);
+    set_flag(Flag::H, false);   
+
+    reg = result;
 }
 
 void Cpu::rr(word address) {
+
+    byte value = mmu.read(address);
+    rr(value);
+    mmu.write(address, value);
 }
 
 void Cpu::sla(byte& reg) {
+
+    bool carry = is_bit_set(reg, 7);
+    byte result = reg << 1;
+    result = clear_bit(result, 0);
+
+    set_flag(Flag::Z, result == 0);
+    set_flag(Flag::N, false);
+    set_flag(Flag::H, false);
+    set_flag(Flag::C, carry);
+
+    reg = result;
 }
 
 void Cpu::sla(word address) {
+
+    byte value = mmu.read(address);
+    sla(value);
+    mmu.write(address, value);
 }
 
 void Cpu::sra(byte& reg) {
+
+    bool carry = is_bit_set(reg, 0);
+    bool msb = is_bit_set(reg, 7);
+    
+    byte result = reg >> 1;
+    result = msb ? set_bit(result, 7) : clear_bit(result, 7);
+
+    set_flag(Flag::Z, result == 0);
+    set_flag(Flag::N, false);
+    set_flag(Flag::H, false);
+    set_flag(Flag::C, carry);
+
+    reg = result;
 }
 
 void Cpu::sra(word address) {
+
+    byte value = mmu.read(address);
+    sra(value);
+    mmu.write(address, value);
 }
 
 void Cpu::srl(byte& reg) {
+
+    bool carry = is_bit_set(reg, 0);
+    byte result = reg >> 1;
+    result = clear_bit(result, 7);
+
+    set_flag(Flag::Z, result == 0);
+    set_flag(Flag::N, false);
+    set_flag(Flag::H, false);
+    set_flag(Flag::C, carry);
+
+    reg = result;
 }
 
 void Cpu::srl(word address) {
