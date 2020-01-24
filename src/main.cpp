@@ -1,6 +1,4 @@
-#include <iostream>
-#include "Cpu.h"
-#include "Mmu.h"
+#include "Main.h"
 
 int main()
 {
