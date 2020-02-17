@@ -9,6 +9,8 @@ set(SOURCE_FILES
     mmu.cpp
     mmu.h
     types.h
+    cartridge.h
+    cartridge.cpp
 )
 
 add_library(gameboy SHARED STATIC ${SOURCE_FILES})
