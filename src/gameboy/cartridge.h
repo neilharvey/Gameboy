@@ -5,37 +5,90 @@
 #include "types.h"
 
 enum class CartridgeType {
-	NONE,
-	MBC1,
-	MBC2,
-	MBC3,
-	HUC1,
+
+	ROM_ONLY = 0x00,                 
+	MBC1 = 0x01,                     
+	MBC1_RAM = 0x02,                 
+	MBC1_RAM_BATTERY = 0x03,        
+	MBC2 = 0x05,                     
+	MBC2_BATTERY = 0x06,            
+	ROM_RAM = 0x08,                  
+	ROM_RAM_BATTERY = 0x09,         
+	MMM01 = 0x0B,                    
+	MMM01_RAM = 0x0C,                
+	MMM01_RAM_BATTERY = 0x0D,        
+	MBC3_TIMER_BATTERY = 0x0F,       
+	MBC3_TIMER_RAM_BATTERY = 0x10,   
+	MBC3 = 0x11,                     
+	MBC3_RAM = 0x12,
+	MBC3_RAM_BATTERY = 0x13,
+	MBC4 = 0x15,
+	MBC4_RAM = 0x16,
+	MBC4_RAM_BATTERY = 0x17,
+	MBC5 = 0x19,
+	MBC5_RAM = 0x1A,
+	MBC5_RAM_BATTERY = 0x1B,
+	MBC5_RUMBLE = 0x1C,
+	MBC5_RUMBLE_RAM = 0x1D,
+	MBC5_RUMBLE_RAM_BATTERY = 0x1E,
+	POCKET_CAMERA = 0xFC,
+	BANDAI_TAMA5 = 0xFD,
+	HUC3 = 0xFE,
+	HUC1_RAM_BATTERY = 0xFF
+};
+
+enum class ROMSize {
+	ROM_32KB = 0x00,
+	ROM_64KB = 0x01,
+	ROM_128KB = 0x02,
+	ROM_256KB = 0x03,
+	ROM_512KB = 0x04,
+	ROM_1MB = 0x05,
+	ROM_2MB = 0x06,
+	ROM_4MB = 0x07,
+	ROM_1P1MB = 0x52,
+	ROM_1P2MB = 0x53,
+	ROM_1P5MB = 0x54
+};
+
+enum class RAMSize {
+	NONE = 0x00,
+	RAM_2KB = 0x01,
+	RAM_8KB = 0x02,
+	RAM_32KB = 0x03
 };
 
 enum class CGBFlag {
-	BACKWARDS_COMPATIBLE,
-	GBC_ONLY
+	GB_AND_GBC = 0x80,
+	GBC_ONLY = 0xC0
+};
+
+enum class SGBFlag {
+	NORMAL = 0x00,
+	SGB = 0x03
+};
+
+enum class Destination {
+	Japanese = 0x00,
+	NonJapanese = 0x01
 };
 
 class Cartridge {
 public:
 
 	// http://bgb.bircd.org/pandocs.htm#thecartridgeheader
-	// entry point // 0100-0103
-	// ninendo logo // 0104-0133
-	std::string title; // 0134-0143
-	//std::string manufacturer_code; // 013F-0142
-	CGBFlag cgb_flag; // 0143
-	//word new_licensee_code; // 0144-0145
-	//byte sgb_flag; // 0146
-	CartridgeType cartridge_type; // 0147 -> mbc_type
-	//byte rom_size; // 0148
-	//byte ram_size; // 0148
-	//byte destination_code; // 014Al
-	//byte old_licensee_code; // 014B
-	//byte rom_version; // 014C
-	//byte header_checksum; // 014D
-	//word global_checksum;
+	std::string title; 
+
+	CGBFlag cgb_flag; 
+	SGBFlag sgb_flag; 
+	CartridgeType cartridge_type;
+	ROMSize rom_size;
+	RAMSize ram_size;
+	Destination destination; 
+
+	byte rom_version; 
+	byte header_checksum; 
+	word global_checksum;
 
 	//static std::unique_ptr<Cartridge> load(const char* romPath);
 	Cartridge(std::vector<byte> rom);

@@ -30,20 +30,9 @@ TEST_CASE("Cartridge header can be read") {
     Cartridge cartridge(rom);
 
     REQUIRE(cartridge.title == "CPU_INSTRS");
+    REQUIRE(cartridge.cgb_flag == CGBFlag::GB_AND_GBC);
+    REQUIRE(cartridge.sgb_flag == SGBFlag::NORMAL);
+    REQUIRE(cartridge.rom_size == ROMSize::ROM_64KB);
+    REQUIRE(cartridge.ram_size == RAMSize::NONE);
 }
-
-
-//TEST_CASE("Boot ROM can be run") {
-//
-//
-//    // TODO : Currently fails loading Nintendo logo due to lack of cartridge data
-//
-//    auto mmu = std::make_unique<Mmu>();
-//    Cpu cpu(*mmu);
-//    while (cpu.pc <= 0x00A7)
-//    {
-//        std::cout << "0x" << std::uppercase << std::setfill('0') << std::setw(4) << std::hex << (int)cpu.pc << "\n";
-//        cpu.tick();
-//    }
-//}
 

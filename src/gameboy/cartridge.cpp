@@ -20,11 +20,18 @@
 //}
 
 Cartridge::Cartridge(std::vector<byte> rom) :
-	cartridge_type(CartridgeType::NONE),
 	rom(rom)
 {
 	title = get_title(rom);
-
+	cgb_flag = static_cast<CGBFlag>(rom[0x143]);
+	sgb_flag = static_cast<SGBFlag>(rom[0x146]);
+	cartridge_type = static_cast<CartridgeType>(rom[0x147]);
+	rom_size = static_cast<ROMSize>(rom[0x0148]);
+	ram_size = static_cast<RAMSize>(rom[0x0149]);
+	destination = static_cast<Destination>(rom[0x14A]);
+	rom_version = rom[0x14C];
+	header_checksum = rom[0x14D];
+	global_checksum = (rom[0x14E] << 8) + rom[0x14F];
 }
 
 byte Cartridge::read(word address)
@@ -52,4 +59,3 @@ std::string Cartridge::get_title(std::vector<byte> rom)
 
 	return title;
 }
-
