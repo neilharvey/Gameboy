@@ -1,24 +1,5 @@
 #include "cartridge.h"
 
-//static std::unique_ptr<Cartridge> load(const char* romPath)
-//{
-//    using std::ifstream;
-//    using std::ios;
-//    using std::streampos;
-//    using std::vector;
-//
-//    ifstream file(romPath, ios::in | ios::binary | ios::ate);
-//    streampos size = file.tellg();
-//    char* bytes = new char[size];
-//
-//    file.seekg(0, ios::beg);
-//    file.read(bytes, size);
-//    file.close();
-//
-//    byte* rom = bytes;
-//    return Cartridge(bytes, size);
-//}
-
 Cartridge::Cartridge(std::vector<byte> rom) :
 	rom(rom)
 {
@@ -32,6 +13,30 @@ Cartridge::Cartridge(std::vector<byte> rom) :
 	rom_version = rom[0x14C];
 	header_checksum = rom[0x14D];
 	global_checksum = (rom[0x14E] << 8) + rom[0x14F];
+}
+
+Cartridge Cartridge::load(std::string romPath)
+{
+	using std::ifstream;
+	using std::ios;
+
+	ifstream stream(romPath, ios::binary | ios::ate);
+
+	if (!stream.is_open()) {
+		throw std::runtime_error("Could not open " + romPath);
+	}
+
+	auto size = stream.tellg();
+	std::vector<char> buffer(size);
+
+	stream.seekg(0, ios::beg);
+	stream.read(&buffer[0], size);
+	stream.close();
+
+	auto rom = std::vector<byte>(buffer.begin(), buffer.end());
+	Cartridge cartridge(rom);
+
+	return cartridge;
 }
 
 byte Cartridge::read(word address)

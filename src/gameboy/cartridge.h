@@ -2,6 +2,10 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include <iostream>
+#include <fstream>
+#include <stdexcept>
+
 #include "types.h"
 
 enum class CartridgeType {
@@ -69,8 +73,8 @@ enum class SGBFlag {
 };
 
 enum class Destination {
-	Japanese = 0x00,
-	NonJapanese = 0x01
+	JAPANESE = 0x00,
+	NON_JAPANESE = 0x01
 };
 
 class Cartridge {
@@ -90,7 +94,7 @@ public:
 	byte header_checksum; 
 	word global_checksum;
 
-	//static std::unique_ptr<Cartridge> load(const char* romPath);
+	static Cartridge load(std::string romPath);
 	Cartridge(std::vector<byte> rom);
 
 	byte read(word address);
