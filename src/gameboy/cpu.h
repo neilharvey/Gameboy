@@ -1,4 +1,9 @@
 #pragma once
+
+#include <iostream>
+#include <iomanip>
+#include <sstream>
+
 #include "Mmu.h"
 #include "Types.h"
 
@@ -21,32 +26,32 @@ class Cpu {
 public:
     union {
         struct {
-            byte a;
             byte f;
+            byte a;
         };
         word af;
     };
 
     union {
         struct {
-            byte b;
             byte c;
+            byte b;
         };
         word bc;
     };
 
     union {
         struct {
-            byte d;
             byte e;
+            byte d;
         };
         word de;
     };
 
     union {
         struct {
-            byte h;
             byte l;
+            byte h;
         };
         word hl;
     };
