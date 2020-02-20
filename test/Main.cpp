@@ -17,4 +17,3 @@ TEST_CASE("Cartridge header can be read") {
     REQUIRE(cartridge.rom_size == ROMSize::ROM_64KB);
     REQUIRE(cartridge.ram_size == RAMSize::NONE);
 }
-
