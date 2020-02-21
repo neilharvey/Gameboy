@@ -61,4 +61,14 @@ TEST_CASE("Boot ROM can be run", "[CPU]") {
 		REQUIRE(mmu->read(0xFF25) == 0xF3);
 		REQUIRE(mmu->read(0xFF24) == 0x77);
 	}
+
+	SECTION("Backgroud palette is initialised") {
+
+		cpu.pc = 0x001D;
+
+		cpu.tick(); // 0x001D – LD A, $0xFC # A represents the color number’s mappings
+		cpu.tick(); // 0x001F – LD($0xFF00 + $0x47), A # initialize the palette
+
+	}
+
 }
