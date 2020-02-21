@@ -12,12 +12,17 @@ using bitwise::is_bit_set;
 using bitwise::set_bit;
 
 Cpu::Cpu(Mmu& m) : mmu(m) {
+    
     af = 0;
     bc = 0;
     de = 0;
     hl = 0;
     sp = 0;
     pc = 0;
+
+    ime = true;
+    halted = false;
+    stopped = false;
 }
 
 void Cpu::tick() {

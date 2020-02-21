@@ -6,6 +6,10 @@ set(CATCH_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/catch)
 add_library(Catch INTERFACE)
 target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})
 
-set(TEST_SOURCES main.cpp)
+set(TEST_SOURCES 
+	bootrom_test.cpp
+	cartridge_test.cpp
+	main.cpp
+)
 add_executable(tests ${TEST_SOURCES})
 target_link_libraries(tests gameboy Catch)

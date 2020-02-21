@@ -7,7 +7,8 @@ Mmu::Mmu(Cartridge cartridge) :
 	vram(0x2000, 0),
 	oam(0x0100, 0),
 	hram(0x0080, 0),
-	wram(0x2000, 0)
+	wram(0x2000, 0),
+	io(0x7F, 0)
 {
 	booting = true;
 }
@@ -65,7 +66,7 @@ byte Mmu::read(word address)
 
 	// FF00 - FF7F   I / O Ports
 	else if (address >= 0xFF00 && address <= 0xFF7F) {
-		return 0;
+		return io[address - 0xFF00];
 	}
 
 	// FF80 - FFFE   High RAM(HRAM)
@@ -128,7 +129,7 @@ void Mmu::write(word address, byte value)
 
 	// FF00 - FF7F   I / O Ports
 	else if (address >= 0xFF00 && address <= 0xFF7F) {
-
+		io[address - 0xFF00] = value;
 	}
 
 	// FF80 - FFFE   High RAM(HRAM)

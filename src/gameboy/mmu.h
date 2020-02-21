@@ -36,5 +36,6 @@ private:
 	std::vector<byte> oam;
 	std::vector<byte> hram;
 	std::vector<byte> wram;
+	std::vector<byte> io;
 };
 
