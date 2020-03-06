@@ -2,8 +2,8 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "Bitwise.h"
-#include "Cpu.h"
+#include "bitwise.h"
+#include "cpu.h"
 
 using bitwise::clear_bit;
 using bitwise::get_lsb;

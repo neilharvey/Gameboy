@@ -1,9 +1,10 @@
 #include "Mmu.h"
 #include "BootRom.h"
 
-Mmu::Mmu(Cartridge cartridge) :
+Mmu::Mmu(Ppu ppu, Cartridge cartridge) :
 
 	cartridge(cartridge),
+	ppu(ppu),
 	vram(0x2000, 0),
 	oam(0x0100, 0),
 	hram(0x0080, 0),

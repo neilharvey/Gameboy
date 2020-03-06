@@ -4,6 +4,7 @@
 
 #include "bootrom.h"
 #include "cartridge.h"
+#include "ppu.h"
 #include "types.h"
 
 // Memory map
@@ -27,11 +28,13 @@ class Mmu
 public:
 	bool booting;
 
-	Mmu(Cartridge cartridge);
+	Mmu(Ppu ppu, Cartridge cartridge);
 	byte read(word address);
 	void write(word address, byte value);
 private:
 	Cartridge cartridge;
+	Ppu ppu;
+
 	std::vector<byte> vram;
 	std::vector<byte> oam;
 	std::vector<byte> hram;
