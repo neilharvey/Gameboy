@@ -1,5 +1,4 @@
 #include "ppu.h"
-#include "ppu.h"
 
 Ppu::Ppu(Display display)
 {

@@ -12,8 +12,9 @@ class Gameboy {
 
 public:
 	Gameboy(Cartridge cartridge, Display display);
+	void run();
 private:
-	Gpu gpu;
+	Ppu ppu;
 	Mmu mmu;
 	Cpu cpu;
-}
+};

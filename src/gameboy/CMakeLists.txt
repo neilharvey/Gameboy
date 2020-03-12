@@ -6,11 +6,15 @@ set(SOURCE_FILES
     bootrom.h
     cpu.cpp
     cpu.h
+    cartridge.cpp
+    cartridge.h
+    display.cpp
+    display.h
+    gameboy.cpp
+    gameboy.h
     mmu.cpp
     mmu.h
     types.h
-    cartridge.h
-    cartridge.cpp
 )
 
 add_library(gameboy SHARED STATIC ${SOURCE_FILES})

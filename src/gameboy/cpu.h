@@ -4,8 +4,8 @@
 #include <iomanip>
 #include <sstream>
 
-#include "Mmu.h"
-#include "Types.h"
+#include "mmu.h"
+#include "types.h"
 
 enum class Condition {
     NZ,
