@@ -1,6 +1,8 @@
 #pragma once
 
 #include "display.h"
+#include "fetcher.h"
+#include "pixel_fifo.h"
 #include "types.h"
 
 // https://gbdev.gg8.se/wiki/articles/Video_Display
@@ -14,14 +16,27 @@ enum class PPUMode {
 
 class Ppu {
 public:
-	Ppu(Display display);
+	Ppu(std::vector<byte>& vram, Display& display);
 
-	byte read(word address);
+	byte read(word address) const;
 	void write(word address, byte value);
 	void tick();
 
 private:
+
+	const int TICKS_PER_OAM_SEARCH = 20 * 4;
+	const int TICKS_PER_LINE = 456;
+
+	const int PIXELS_PER_LINE = 160;
+	const int VBLANK_START_LINE = 144;
+	const int VBLANK_END_LINE = 154;
+
+	Display& display;
 	PPUMode mode;
+	Fetcher fetcher;
+	PixelFifo fifo;
+
+	std::vector<byte>& vram;
 
 	// LCD Control
 	// Bit 7 - LCD Display Enable(0 = Off, 1 = On)
@@ -55,4 +70,12 @@ private:
 
 	byte wy;
 	byte wx;
+
+	int ticks;
+	int pixels;
+
+	void oam_search();
+	void pixel_transfer();
+	void hblank();
+	void vblank();
 };

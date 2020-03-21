@@ -11,7 +11,7 @@ using bitwise::get_msb;
 using bitwise::is_bit_set;
 using bitwise::set_bit;
 
-Cpu::Cpu(Mmu& m) : mmu(m) {
+Cpu::Cpu(Mmu& mmu) : mmu(mmu) {
     
     af = 0;
     bc = 0;

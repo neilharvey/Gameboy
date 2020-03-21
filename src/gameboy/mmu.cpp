@@ -1,11 +1,11 @@
 #include "Mmu.h"
 #include "BootRom.h"
 
-Mmu::Mmu(Ppu ppu, Cartridge cartridge) :
-	cartridge(cartridge),
-	ppu(ppu)
+Mmu::Mmu(Ppu& ppu, std::vector<byte>& ram, Cartridge& cartridge) :
+	ppu(ppu),
+    ram(ram),
+	cartridge(cartridge)
 {
-	ram = std::vector<byte>(0x10000);
 	booting = true;
 }
 
@@ -39,5 +39,3 @@ void Mmu::write(word address, byte value)
         ram[address] = value;
     }
 }
-
-// Memory& get_mapped_memory(word address) 

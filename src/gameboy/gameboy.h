@@ -11,10 +11,12 @@
 class Gameboy {
 
 public:
-	Gameboy(Cartridge cartridge, Display display);
+	Gameboy(Cartridge& cartridge);
 	void run();
 private:
-	Ppu ppu;
-	Mmu mmu;
+	Display display;
 	Cpu cpu;
+	Mmu mmu;
+	Ppu ppu;
+	std::vector<byte> ram;
 };

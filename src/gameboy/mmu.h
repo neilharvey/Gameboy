@@ -10,13 +10,13 @@
 class Mmu
 {
 public:
-	Mmu(Ppu ppu, Cartridge cartridge);
-	byte read(word address);
-	void write(word address, byte value);
+    Mmu(Ppu& ppu, std::vector<byte>& ram, Cartridge& cartridge);
+    byte read(word address);
+    void write(word address, byte value);
 private:
-	bool booting;
-	Cartridge cartridge;
-	Ppu ppu;
-	std::vector<byte> ram;
+    bool booting;
+    Cartridge& cartridge;
+    Ppu& ppu;
+    std::vector<byte>& ram;
 };
 

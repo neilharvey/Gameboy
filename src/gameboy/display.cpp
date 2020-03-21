@@ -1,7 +1,7 @@
 #include "display.h"
 
 Display::Display() :
-    pixels(WIDTH * HEIGHT, 0)
+    pixels(SCREEN_WIDTH * SCREEN_HEIGHT, 0)
 {
 }
 
@@ -16,5 +16,5 @@ int Display::get_pixel(int x, int y) const
 
 int Display::pixel_index(int x, int y) const
 {
-    return x + (y * WIDTH);
+    return x + (y * SCREEN_WIDTH);
 }

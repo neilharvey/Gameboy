@@ -1,10 +1,18 @@
 #include "ppu.h"
+#include "ppu.h"
+#include "ppu.h"
+#include "ppu.h"
+#include "ppu.h"
 
-Ppu::Ppu(Display display)
+Ppu::Ppu(std::vector<byte>& vram, Display& display) :
+	vram(vram),
+	display(display)
 {
+	mode = PPUMode::OAM_SEARCH;
+	ticks = 0;
 }
 
-byte Ppu::read(word address)
+byte Ppu::read(word address) const
 {
 	// http://bgb.bircd.org/pandocs.htm#videodisplay
 	switch (address) {
@@ -55,14 +63,69 @@ void Ppu::tick()
 
 	// VBLANK WHEN LINE 144-154
 
+	ticks++;
+
 	switch (mode) {
 	case PPUMode::OAM_SEARCH:
-		// 20 clocks
+		oam_search();
+		break;
 	case PPUMode::PIXEL_TRANSFER:
-		// 43 clocks
+		pixel_transfer();
+		break;
 	case PPUMode::HBLANK:
-		// 51 clocks
+		hblank();
+		break;
 	case PPUMode::VBLANK:
-		// 10 lines
+		vblank();
+		break;
+	}
+}
+
+void Ppu::oam_search()
+{
+	// https://youtu.be/HyzD8pNlpwI?t=2753
+	// determine 10 visible sprites to display
+
+	if (ticks == TICKS_PER_OAM_SEARCH) {
+		mode = PPUMode::PIXEL_TRANSFER;
+	}
+}
+
+void Ppu::pixel_transfer()
+{
+	// https://youtu.be/HyzD8pNlpwI?t=2957
+
+	fetcher.tick();
+
+	if (fifo.size() > 8) {
+		display.set_pixel(pixels++, line, fifo.dequeue());
+	
+		if (pixels == PIXELS_PER_LINE) {
+			mode = PPUMode::HBLANK;
+		}	
+	}
+}
+
+void Ppu::hblank()
+{	
+	if (ticks == TICKS_PER_LINE) {
+		ticks = 0;
+		if (++ly == VBLANK_START_LINE) { 
+			// render the image at this point?
+			mode = PPUMode::VBLANK;
+		} else {
+			mode = PPUMode::OAM_SEARCH;
+		}
+	}
+}
+
+void Ppu::vblank()
+{
+	if (ticks == TICKS_PER_LINE) {
+		ticks = 0;
+		if (++ly == VBLANK_END_LINE) {
+			mode = PPUMode::OAM_SEARCH;
+			line = 0;
+		}
 	}
 }
