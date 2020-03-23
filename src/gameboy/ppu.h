@@ -7,15 +7,16 @@
 
 // https://gbdev.gg8.se/wiki/articles/Video_Display
 
-enum class PPUMode {
-	HBLANK,
-	VBLANK,
-	OAM_SEARCH,
-	PIXEL_TRANSFER
-};
-
 class Ppu {
 public:
+
+	enum class PPUMode {
+		HBLANK,
+		VBLANK,
+		OAM_SEARCH,
+		PIXEL_TRANSFER
+	};
+
 	Ppu(std::vector<byte>& vram, Display& display);
 
 	byte read(word address) const;
